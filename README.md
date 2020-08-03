@@ -7,10 +7,26 @@ rootin tootin strap-ass bootin
 
 quickly deploy some of the more common packages, tools and libraries to spend less time with setup. 
 
+- installs basics: `zsh expect git curl wget vim dialog dpkg pkg-config build-essential neofetch htop nmon nmap pinentry-tty htop`
+- current list for [pkg_list.txt]
+- current list for [lib_list.txt]
+- install interactive [node manager]
+- install [Go]
+- install rust via [rustup]
+- install ruby via [rbenv]
+
+[pkg_list.txt]: https://github.com/jeromescuggs/bootstrap/blob/master/env/pkg_list.txt
+[lib_list.txt]: https://github.com/jeromescuggs/bootstrap/blob/master/env/lib_list.txt
+[node manager]: https://github.com/tj/n
+[Go]: https://golang.org/dl/
+[rustup]: https://rustup.rs
+[rbenv]: https://github.com/rbenv/rbenv
+
+
 ### requirements
 
 - debian buster, should be fine with ubuntu 18.04-20.04 but don't quote me on that 
-- x86_64 for now - only because i have hardcoded the Golang binary download, which is for linux/x86. a more flexible setup is one of my priorities, but for now if need be you can comment out lines 60-68 of the `init` script and easily run this on ARM devices as well. 
+- everything except for the Golang installation is designed to seamlessly work across cpu architectures - for now Golang supports **x86_64** and **aarch64** cpu's. Not sure what you're running? Run `uname -m` to find out. Arm 6/7 might be in the future, and depending on testing I might need to add some other arch alts e.g. **armv8/arm64**
 
 ## setup 
 
