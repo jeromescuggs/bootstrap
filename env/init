@@ -3,7 +3,7 @@ JRM_DIR=$(dirname $(readlink -f $0))
 JRM_GIT_DIR=$HOME/gits
 # exp_user=$1
 # exp_pass=$2
-
+JRM_ARCH=$(uname -m)
 # if [[ -z $1 ]]; then 
 # 	echo "USAGE: init [username] [password]"
 # 	echo "yup"
@@ -55,16 +55,32 @@ sudo xargs -a pkg_list.txt apt install -y
 sleep 1
 echo " "
 echo "packages installed!"
+
 echo "setting up dev environment..."
 sleep 3
+
 echo "installing Golang to /usr/local/go..."
+
+# go binaries for x86, arm64, arm7
 JRM_GO_LINUX=go1.14.6.linux-amd64.tar.gz
-JRM_GO=$JRM_GO_LINUX
-cd $JRM_DIR && wget https://golang.org/dl/$JRM_GO
+JRM_GO_ARM64=go1.14.6.linux-arm64.tar.gz
+JRM_GO_ARM7=
+
+# determine computer cpu arch and grab correct binary
+if [[ $JRM_ARCH == "aarch64" ]]; then
+    cd $JRM_DIR && wget https://golang.org/dl/$JRM_GO_ARM64
+fi
+
+if [[ $JRM_ARCH == "x86_64" ]]; then
+    cd $JRM_DIR && wget https://golang.org/dl/$JRM_GO_LINUX 
+fi 
+
+# unzip to /go and install
 tar -xvf $JRM_GO
 sudo mv $JRM_DIR/go /usr/local
 echo "creating binary and source Go directory in $HOME..."
 mkdir -p $HOME/go
+echo "Golang has been installed!" 
 sleep 1
 echo "installing nodejs version manager in /usr/local/..."
 sleep 1
@@ -79,7 +95,38 @@ sudo make install
 sleep 1
 echo "done! remember to install npm with e.g. 'n lts', 'n latest' etc"
 sleep 3
-# git clone https://github.com/jeromescuggs/git-r-done
-# mkdir -p $HOME/.jrmbin && cp $HOME/gits/git-r-done/jrmgit $HOME/.jrmbin
+echo "installing Rustup version manager & cargo..."
+curl sh.rustup.rs -sSf | sh -s -- -y
+sleep 1
+echo "Rust binaries and Cargo have been installed to $HOME/cargo!"
+echo "Manage Rust versions by running rustup"
+sleep 1
+echo "installing rbenv to manage Ruby..."
+# setup rbenv, and cross fingers
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash
+echo "rbenv has been installed to $HOME/.rbenv"
+sleep 1
+echo "verifying installation..."
+# verify rbenv 
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-doctor | bash
+echo "remember to first run 'rbenv install [version]' and then set it as default with"
+echo "rbenv global [version]"
+echo "TIP: if building ruby on a machine with less than 1gb ram, manually set"
+echo "a temp directory to build from e.g."
+echo "TMPDIR=~/ rbenv install 2.7.0"
+echo "
+  _______ __       __       __             __ __
+ |   _   |__.-----|__.-----|  |--.-----.--|  |  |
+ |.  1___|  |     |  |__ --|     |  -__|  _  |__|
+ |.  __) |__|__|__|__|_____|__|__|_____|_____|__|
+ |:  | bootrap complete - happy coding!
+ |::.|        scuggscorp inc. 
+ \`---'                https://ha.zardo.us
+"
+
+
+
+
+
 
 
