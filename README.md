@@ -1,6 +1,8 @@
 # bootstrap
 rootin tootin strap-ass bootin
 
+![](https://github.com/jeromescuggs/jeromescuggs/jrmvim.png)
+
 ## overview
 
 quickly deploy some of the more common packages, tools and libraries to spend less time with setup. 
