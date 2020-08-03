@@ -45,7 +45,7 @@ once done, the script will proceed to then setup popular development environment
 
 ### vim setup
 
-i am pretty satisfied with my vim setup, as it is both very pretty yet very lightweight. coming from SpaceVim, learning to take a vanilla vim install and make it fancy without including the stuff i don't use from SpaceVim was pretty difficult, because of the highly specialized way it sets everything up. 
+i am pretty satisfied with my vim setup, as it is both very pretty yet very lightweight. coming from SpaceVim, learning to take a vanilla vim install and make it fancy without including the stuff i don't use from SpaceVim was pretty difficult, because of the highly specialized way it sets everything up - it wound up setting me *back* as far as learning the ins and outs of configuring vim. 
 
 the core magic is built on the same tool SpaceVim uses: [vim-plug]. after cloning this git repository, navigate to it and run `vim-setup.sh` which will create a folder in your $HOME dir `.vim` and then copy the `vimrc` from this repo into it. at the same time, the script will also grab the vim-plug submodule from its home repository into this folder, before then copying the plugin to its proper subfolder in your home `.vim` directory. 
 
@@ -62,6 +62,7 @@ if has('nvim')
 " with neovim can be placed here
 " !-------------------------------!endif
 endif
+```
 
 [git-r-done]: https://github.com/jeromescuggs/git-r-done
 [vim-plug]: https://github.com/junegunn/vim-plug
