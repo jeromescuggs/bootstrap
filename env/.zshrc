@@ -1,5 +1,5 @@
 # set omz install path, set path for rustup completions
-export ZSH="$HOME/.oh-my-zsh"
+export ZSH="/home/$USER/.oh-my-zsh"
 fpath+=~/.zfunc
 
 # pip zsh completion start
@@ -14,7 +14,22 @@ function _pip_completion {
 compctl -K _pip_completion pip
 # pip zsh completion end
 
+# jerome-theme can be found at github.com/jeromescuggs/jerome-theme
+#ZSH_THEME="zeta"
 ZSH_THEME="dieter"
+
+# TODO condition this on finding a dietpi-exclusive executable 
+if [[ -d /DietPi ]]; then
+export PATH=/usr/bin:/bin:/usr/sbin:/sbin:$PATH
+/DietPi/dietpi/dietpi-login
+. /DietPi/dietpi/func/dietpi-globals 
+fi 
+
+# i guess if you use deno, cool, whatever. still needs some work!
+if [[ -d $HOME/.deno ]]; then 
+    export DENO_INSTALL="/home/$USER/.deno"
+    export PATH="$DENO_INSTALL/bin:$PATH"
+fi 
 
 # uncomment the following code when using liquidprompt - must be installed first!
 # [[ $- = *i* ]] && source ~/liquidprompt/liquidprompt
@@ -42,49 +57,80 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 
 plugins=(
-#       zsh-256color
-        sudo
+#        zsh-256color
 		ssh-agent
+        sudo
         )
+
+# other popular plugins:
 # git, debian, ubuntu, ssh-agent, gpg-agent, tmux
 
+# try to minimize any more code above this line - the following
 # initiliazes the meat of oh-my-zsh, and everything below it is executed 
 # "within the context" of the OMZ environment
 source $ZSH/oh-my-zsh.sh
 
+
 # User configuration
 
 # export MANPATH="/usr/local/man:$MANPATH"
-
-# this is used with the cargo app "pastel", comment it out if it borks something
 export COLORTERM="truecolor"
 
 # You may need to manually set your language environment
 # NOTE: i've read reports that LANG is supposed to be set as "en" and not 
 # used to define the character set, ie, unicode 
 # if you still have hiccups, try setting the bottom variable instead 
-export LANG="en_US.UTF-8"
+# export LANG="en_US.UTF-8"
 # export LANG="en"
-# export LC_ALL="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 # WSL X11 variables, uncomment to play nice with X on WSL
-# export DISPLAY=localhost:0
+
+if [[ "$(</proc/version)" == *Microsoft* ]] 2>/dev/null; then
+  export WSL=1
+  export DISPLAY=localhost:0
+  export NO_AT_BRIDGE=1
+  export LIBGL_ALWAYS_INDIRECT=1
+#  sudo /usr/local/bin/clean-tmp-su
+# else
+# export WSL=0
+fi
+
+#export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
 # export LIBGL_ALWAYS_INDIRECT
 
 # Rust/cargo PATH
-export PATH="$PATH:/home/$USER/.cargo/bin"
+export PATH="$PATH:/home/jerome/.cargo/bin"
 
 # pip path
-export PATH="$PATH:/home/$USER/.local/bin"
+export PATH="$PATH:/home/jerome/.local/bin"
 
 # Go path, not nearly as important now that GO111MODULE is a thing
-export GOPATH=$HOME/go
-export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+# if [[ -x "$(command -v go)" ]]; then
+if [[ -d /usr/local/go/bin ]]; then
+    export GOPATH=$HOME/go
+    export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin
+fi 
 
-# path for ruby
-# REPLACE RVM FILTH WITH RBENV CONDITIONAL ASAP
-# export PATH="$PATH:$HOME/.rvm/bin"
-# sources rvm/ruby - as a function
+# personal bin
+# export PATH="$PATH:/home/$USER/.jrmbin"
+export PATH="$PATH:/home/$USER/balena-cli"
+
+# RVM - define PATH and source as a function 
+if [[ -d $HOME/.rvm ]]; then
+    export PATH="$PATH:$HOME/.rvm/bin"
+    [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" 
+fi 
+
+# rbenv - define PATH and source rbenv 
+if [[ -d $HOME/.rbenv ]]; then 
+  export PATH="$HOME/.rbenv/bin:$PATH"
+  eval "$(rbenv init -)"
+fi 
+
+# this variable can be tweaked to get a variety of things to play nice. default is set to 24bit to 
+# make the best of the pastel utility
+export COLORTERM=24bit 
 
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then
@@ -96,60 +142,82 @@ export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
 
-# check for default brew install dir, and add to path
+
 if [[ -x "$(command -v brew)" ]]; then
     eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
 fi
 
-# check for keychain, and start it with default ssh key 
+# add ssh key files (e.g. id_rsa) and any gpg keys you'd like keychain to handle
+# using the short key format (16 characters)
 if [[ -x "$(command -v keychain)" ]]; then
-    eval `keychain --eval --agents ssh,gpg id_rsa`
+    eval `keychain --eval --agents ssh,gpg id_rsa 0xDEADBEEF`
 fi
 
 # eyecandy: the following defines colorschemes for the 'ls' command and its relatives 
 # depending on things, calling one, both, one before the other, etc. can lead to different blends of colors, so i'm leaving it all below
 
-if [[ $DIRCLR_VIVID == "1" ]]; then
-export LS_COLORS="$(vivid generate snazzy)"
-fi
+# export LS_COLORS="$(vivid generate snazzy)"
+
+# eval $(dircolors -b $HOME/.dircolors)
 
  eval $(dircolors -b $HOME/.dircolors)
  if [ -n "$LS_COLORS" ]; then
        zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
  fi
 
-#eval $(TERM=xterm-256color dircolors ~/.dircolors)
+ if [[ -x "$(command -v vivid)" ]]; then
+    export LS_COLORS="$(vivid generate snazzy)"
+ fi 
+
+# eval $(TERM=xterm-256color dircolors ~/.dircolors)
 
 # invoke tmux requirements 
-# if 
-#   [ -z $TMUX ] 
-# then
-#    export TERM=xterm-256color
-#  else 
-#    export TERM=screen-256color
-#fi
+if 
+  [ -z $TMUX ] 
+then
+    export TERM=xterm-256color
+  else 
+    export TERM=tmux-256color
+fi
 
-# better to add [ set -g default-terminal "screen-256color" ] to tmux conf
+# banner: the following is what pops up upon initial login
+# (cfonts is a neat node package that can generate colorized figlets: npm i -g cfonts)
+# cfonts jerome -c cyan,candy -s 
 
-if [[ -e $HOME/.aliases ]]; then
-source ~/.aliases
+# load aliases if you have any
+if [[ -f $HOME/.aliases ]]; then
+    source ~/.aliases
 fi 
 
-# initialize zsh-syntax-highlighting
-# source $HOME/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# if [[ -f ~/.local/bin/banner ]]; then 
-#      banner 
-# fi    
-# ~/.zshrc
+# zsh syntax highlighting - to install, 
+# # git clone https://github.com/zsh-users/zsh-syntax-highlighting $HOME/.oh-my-zsh/custom/plugins
+if [[ -f $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source /home/$USER/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi 
+# source /home/$USER/.dotfiles/zsh-fh.zsh 
 
 # TODO: check for starship, if true, execute: 
-if [ -x "$(command -v starship)" ]; then 
+if [[ -f $HOME/.cargo/bin/starship ]]; then
     eval "$(starship init zsh)"
-fi
+fi 
+# export TERM="xterm-256color"
+
 compinit
 
-if [[ -x "$(command -v resh)" ]]; then 
-[ -f ~/.resh/shellrc ] && source ~/.resh/shellrc
+if [[ -f $HOME/.cargo/bin/broot ]]; then
+    source /home/jerome/.config/broot/launcher/bash/br
 fi 
 
+if [[ -d $HOME/.resh ]]; then
+    [ -f ~/.resh/shellrc ] && source ~/.resh/shellrc
+fi 
 
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/jerome/.sdkman"
+[[ -s "/home/jerome/.sdkman/bin/sdkman-init.sh" ]] && source "/home/jerome/.sdkman/bin/sdkman-init.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+source /home/jerome/.config/broot/launcher/bash/br
