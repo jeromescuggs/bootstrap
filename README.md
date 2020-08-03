@@ -1,7 +1,7 @@
 # bootstrap
 rootin tootin strap-ass bootin
 
-![](https://github.com/jeromescuggs/jeromescuggs/jrmvim.png)
+![](https://github.com/jeromescuggs/monoeye/jrmvim.png)
 
 ## overview
 
