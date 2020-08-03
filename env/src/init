@@ -1,0 +1,53 @@
+#!/bin/bash
+
+exp_user=$1
+exp_pass=$2
+
+if [[ -z $1 ]]; then 
+	echo "USAGE: init [username] [password]"
+	echo "yup"
+fi 
+
+echo -n "
+
+ ██████╗  ███████╗  ██████╗  █████╗  ██╗   ██╗ ███████╗ ███████╗
+ ██╔══██╗ ██╔════╝ ██╔════╝ ██╔══██╗ ██║   ██║ ██╔════╝ ██╔════╝
+ ██████╔╝ █████╗   ██║      ███████║ ██║   ██║ ███████╗ █████╗
+ ██╔══██╗ ██╔══╝   ██║      ██╔══██║ ██║   ██║ ╚════██║ ██╔══╝
+ ██████╔╝ ███████╗ ╚██████╗ ██║  ██║ ╚██████╔╝ ███████║ ███████╗
+ ╚═════╝  ╚══════╝  ╚═════╝ ╚═╝  ╚═╝  ╚═════╝  ╚══════╝ ╚══════╝"
+
+ echo -n "
+ 
+ ████████╗ ██╗  ██╗ ███████╗     ███╗   ██╗ ███████╗ ████████╗
+ ╚══██╔══╝ ██║  ██║ ██╔════╝     ████╗  ██║ ██╔════╝ ╚══██╔══╝
+    ██║    ███████║ █████╗       ██╔██╗ ██║ █████╗      ██║
+    ██║    ██╔══██║ ██╔══╝       ██║╚██╗██║ ██╔══╝      ██║
+    ██║    ██║  ██║ ███████╗ ██╗ ██║ ╚████║ ███████╗    ██║
+    ╚═╝    ╚═╝  ╚═╝ ╚══════╝ ╚═╝ ╚═╝  ╚═══╝ ╚══════╝    ╚═╝"
+echo " "
+echo "alright, let's proceed."
+
+sudo apt install zsh
+	
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install -y zsh git pkg-config build-essential neofetch htop nmon nmap pinentry-tty htop devscripts 
+
+wget https://becausethe.net/jrmg
+
+chmod +x $PWD/jrmg
+
+$PWD/jrmg $exp_user $exp_pass
+
+# git clone https://github.com/jeromescuggs/.dotfiles
+
+cd ~/ && $HOME/.dotfiles/env.sh 
+
+mkdir -p $HOME/gits && cd $HOME/gits
+
+git clone https://github.com/jeromescuggs/git-r-done
+
+mkdir -p $HOME/.jrmbin && cp $HOME/gits/git-r-done/jrmgit $HOME/.jrmbin
+
+

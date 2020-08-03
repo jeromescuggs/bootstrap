@@ -1,0 +1,10 @@
+cmake
+autotools
+libtool
+bison
+meson
+flex
+xsel
+xclip
+wmctrl
+neovim

@@ -1,0 +1,10 @@
+libclang-dev
+zlib1g-dev
+libssl-dev
+libffi-dev
+libllvm-ocaml-dev
+libjpeg-dev
+imagemagick
+graphicsmagick
+
+

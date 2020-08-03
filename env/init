@@ -1,0 +1,85 @@
+#!/bin/bash
+JRM_DIR=$(dirname $(readlink -f $0))
+JRM_GIT_DIR=$HOME/gits
+# exp_user=$1
+# exp_pass=$2
+
+# if [[ -z $1 ]]; then 
+# 	echo "USAGE: init [username] [password]"
+# 	echo "yup"
+# fi 
+
+echo -n "
+
+ ██████╗  ███████╗  ██████╗  █████╗  ██╗   ██╗ ███████╗ ███████╗
+ ██╔══██╗ ██╔════╝ ██╔════╝ ██╔══██╗ ██║   ██║ ██╔════╝ ██╔════╝
+ ██████╔╝ █████╗   ██║      ███████║ ██║   ██║ ███████╗ █████╗
+ ██╔══██╗ ██╔══╝   ██║      ██╔══██║ ██║   ██║ ╚════██║ ██╔══╝
+ ██████╔╝ ███████╗ ╚██████╗ ██║  ██║ ╚██████╔╝ ███████║ ███████╗
+ ╚═════╝  ╚══════╝  ╚═════╝ ╚═╝  ╚═╝  ╚═════╝  ╚══════╝ ╚══════╝"
+
+ echo -n "
+ 
+ ████████╗ ██╗  ██╗ ███████╗     ███╗   ██╗ ███████╗ ████████╗
+ ╚══██╔══╝ ██║  ██║ ██╔════╝     ████╗  ██║ ██╔════╝ ╚══██╔══╝
+    ██║    ███████║ █████╗       ██╔██╗ ██║ █████╗      ██║
+    ██║    ██╔══██║ ██╔══╝       ██║╚██╗██║ ██╔══╝      ██║
+    ██║    ██║  ██║ ███████╗ ██╗ ██║ ╚████║ ███████╗    ██║
+    ╚═╝    ╚═╝  ╚═╝ ╚══════╝ ╚═╝ ╚═╝  ╚═══╝ ╚══════╝    ╚═╝"
+echo " "
+sleep 1
+clear
+echo "alright, let's proceed."
+sleep 1
+echo "--------------------------------------- "
+echo "     █         █                 █  █   "
+echo "     █                    █      █  █   "
+echo " ███ █ █ ███   █ ███ ███ ███ ███ █  █   "
+echo " █ █ ██  █ █   █ █ █ █    █    █ █  █   "
+echo " █ █ ██  █ █   █ █ █   █  █  ███ █  █   "
+echo " ███ █ █ ███   █ █ █ ███  ██ ███ ██ ██  "
+echo " █         █                            "
+echo " █       ███   update & install         "
+echo "--------------------------------------- "
+sleep 3
+sudo apt update && sudo apt upgrade -y
+sleep 1
+echo "installing Zshell, git, and important development packages"
+sudo apt install -y zsh expect git curl wget vim dialog dpkg pkg-config build-essential neofetch htop nmon nmap pinentry-tty htop devscripts 
+sleep 1
+echo "installing important libraries..."
+sudo xargs -a lib_list.txt apt install -y
+sleep 1 
+echo "installing useful packages..."
+sudo xargs -a pkg_list.txt apt install -y
+sleep 1
+echo " "
+echo "packages installed!"
+echo "setting up dev environment..."
+sleep 3
+echo "installing Golang to /usr/local/go..."
+JRM_GO_LINUX=go1.14.6.linux-amd64.tar.gz
+JRM_GO=$JRM_GO_LINUX
+cd $JRM_DIR && wget https://golang.org/dl/$JRM_GO
+tar -xvf $JRM_GO
+sudo mv $JRM_DIR/go /usr/local
+echo "creating binary and source Go directory in $HOME..."
+mkdir -p $HOME/go
+sleep 1
+echo "installing nodejs version manager in /usr/local/..."
+sleep 1
+echo "creating $HOME/gits and downloading n build files..."
+mkdir -p $JRM_DIR_GIT && cd $JRM_DIR_GIT
+git clone https://github.com/tj/n $JRM_DIR_GIT/n
+echo "building & installing..."
+cd $JRM_DIR_GIT/n
+sudo chown -R $USER /usr/local/
+make
+sudo make install
+sleep 1
+echo "done! remember to install npm with e.g. 'n lts', 'n latest' etc"
+sleep 3
+# git clone https://github.com/jeromescuggs/git-r-done
+# mkdir -p $HOME/.jrmbin && cp $HOME/gits/git-r-done/jrmgit $HOME/.jrmbin
+
+

@@ -1,0 +1,129 @@
+" # Basic Settings
+set nocompatible				" vim-specific settings, non-vi-compatible
+set backspace=indent,eol,start 	" Allow backspace in insert mode
+set number						" Line numbers
+set hidden						" Allow hidden buffers
+filetype plugin indent on		" Enable file type detection and do language-dependent indenting.
+set history=100					" Default = 8
+nnoremap ; :
+set tabstop=4					" Default tabs are too big
+set wrap						" Turn on word wrapping
+set linebreak					" Only wrap at sensible places
+set nolist						" list disables linebreak
+set textwidth=0					" prevent Vim from automatically inserting line breaks
+set wrapmargin=0
+set formatoptions-=t			" Don't change wrapping on existing lines
+set formatoptions+=l
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'jeromescuggs/hybrid-operator'
+Plug 'jeromescuggs/vim-deus'
+Plug 'chriskempson/base16-vim'
+Plug 'lilydjwg/colorizer'
+
+" Plug 'tpope/vim-markdown'
+" Plug 'gabrielelana/vim-markdown'
+Plug 'vim-scripts/txt.vim'
+" Plug 'vim-pandoc/vim-pandoc-syntax'
+
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-abolish' " Fancy abbreviation replacements
+Plug 'junegunn/limelight.vim' " Highlights only active paragraph
+Plug 'junegunn/goyo.vim' " Full screen writing mode
+Plug 'reedes/vim-lexical' " Better spellcheck mappings
+Plug 'reedes/vim-litecorrect' " Better autocorrections
+
+
+Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+
+Plug 'justinmk/vim-syntax-extra'
+
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-notes'
+
+Plug 'kristijanhusak/vim-carbon-now-sh'
+
+Plug 'reedes/vim-wordy'
+Plug 'reedes/vim-pencil'
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ayu-theme/ayu-vim'
+Plug 'ayu-theme/ayu-vim-airline'
+
+Plug 'bling/vim-bufferline'
+Plug 'vim-syntastic/syntastic'
+Plug 'edkolev/tmuxline.vim'
+Plug 'fadein/vim-FIGlet'
+call plug#end()
+:autocmd!
+
+
+
+  augroup pencil
+   autocmd!
+   autocmd filetype markdown,mkd call pencil#init()
+       \ | call lexical#init()
+       \ | call litecorrect#init()
+       \ | setl spell spl=en_us fdl=4 noru nonu nornu
+       \ | setl fdo+=search
+  augroup END
+ " Pencil / Writing Controls {{{
+   let g:pencil#wrapModeDefault = 'soft'
+   let g:pencil#textwidth = 74
+   let g:pencil#joinspaces = 0
+   let g:pencil#cursorwrap = 1
+   let g:pencil#conceallevel = 3
+   let g:pencil#concealcursor = 'c'
+   let g:pencil#softDetectSample = 20
+   let g:pencil#softDetectThreshold = 130
+ " }}}
+
+" clear autocmds
+" :autocmd!
+
+" colo hybrid_operator
+if has('nvim')
+" !-------------------------------!
+" any commands that will only work
+" with neovim can be placed here
+" !-------------------------------!
+endif
+
+let ayucolor="mirage"
+colo ayu 
+set background=dark
+set termguicolors
+
+syntax on
+syntax enable 
+set t_Co=256
+map <C-n> :NERDTreeToggle<CR>
+
+function! WinMove(key)
+    let t:curwin = winnr()
+    exec "wincmd ".a:key
+    if (t:curwin == winnr())
+        if (match(a:key,'[jk]'))
+            wincmd v
+        else
+            wincmd s
+        endif
+        exec "wincmd ".a:key
+    endif
+endfunction
+
+nnoremap <silent> <C-h> :call WinMove('h')<CR>
+nnoremap <silent> <C-j> :call WinMove('j')<CR>
+nnoremap <silent> <C-k> :call WinMove('k')<CR>
+nnoremap <silent> <C-l> :call WinMove('l')<CR>
+
+set mouse=a             " allow using mouse
+set laststatus=2		" Make airline status bar appear all the time
+set noshowmode          " hides the duplicate --INSERT-- under airline
+
+au BufEnter,BufRead,BufNewFile *.md,*.archive,*.page :setlocal filetype=markdown
+" au BufEnter,BufRead,BufNewFile *.page :setlocal filetype=md
+:autocmd VimEnter * :AirlineRefresh
