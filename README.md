@@ -43,6 +43,8 @@ after this, it will divide the remaining installs between needed libraries and p
 
 once done, the script will proceed to then setup popular development environment managers for Go and NPM. Rust and Ruby will be coming soon. 
 
+you might want to check out the `.zshrc` file located in `bootstrap/env` for an idea as to how you might integrate a lot of these programs with your shell. as you can see by looking at it, a lot of it is very flexible - if you have a certain program, the rc file will add the relevant source files and `PATH`s, but you won't get a flood of errors if they're not found. it's an older rc file however and i will be replacing it with a far more current version asap.
+
 ### vim setup
 
 i am pretty satisfied with my vim setup, as it is both very pretty yet very lightweight. coming from SpaceVim, learning to take a vanilla vim install and make it fancy without including the stuff i don't use from SpaceVim was pretty difficult, because of the highly specialized way it sets everything up - it wound up setting me *back* as far as learning the ins and outs of configuring vim. 

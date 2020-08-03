@@ -42,8 +42,9 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 # Standard plugins can be found in ~/.oh-my-zsh/plugins/*
 
 plugins=(
-        zsh-256color
+#       zsh-256color
         sudo
+		ssh-agent
         )
 # git, debian, ubuntu, ssh-agent, gpg-agent, tmux
 
@@ -71,17 +72,18 @@ export LANG="en_US.UTF-8"
 # export LIBGL_ALWAYS_INDIRECT
 
 # Rust/cargo PATH
-export PATH="$PATH:/home/jerome/.cargo/bin"
+export PATH="$PATH:/home/$USER/.cargo/bin"
 
 # pip path
-export PATH="$PATH:/home/jerome/.local/bin"
+export PATH="$PATH:/home/$USER/.local/bin"
 
 # Go path, not nearly as important now that GO111MODULE is a thing
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
 # path for ruby
-export PATH="$PATH:$HOME/.rvm/bin"
+# REPLACE RVM FILTH WITH RBENV CONDITIONAL ASAP
+# export PATH="$PATH:$HOME/.rvm/bin"
 # sources rvm/ruby - as a function
 
 # Preferred editor for local and remote sessions
@@ -134,7 +136,7 @@ source ~/.aliases
 fi 
 
 # initialize zsh-syntax-highlighting
-source $HOME/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# source $HOME/.dotfiles/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # if [[ -f ~/.local/bin/banner ]]; then 
 #      banner 
 # fi    
@@ -150,6 +152,4 @@ if [[ -x "$(command -v resh)" ]]; then
 [ -f ~/.resh/shellrc ] && source ~/.resh/shellrc
 fi 
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
 
