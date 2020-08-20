@@ -6,5 +6,5 @@ libllvm-ocaml-dev
 libjpeg-dev
 imagemagick
 graphicsmagick
-
+libjpeg-dev
 

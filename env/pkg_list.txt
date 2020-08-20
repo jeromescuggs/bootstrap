@@ -1,3 +1,9 @@
+git
+curl
+wget
+build-essential
+devscripts
+llvm
 cmake
 autotools
 libtool
@@ -7,4 +13,4 @@ flex
 xsel
 xclip
 wmctrl
-neovim
+vim
