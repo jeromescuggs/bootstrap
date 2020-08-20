@@ -3,6 +3,10 @@ curl
 wget
 build-essential
 devscripts
+htop
+nmon
+bmon
+neofetch
 llvm
 cmake
 autotools
@@ -14,3 +18,8 @@ xsel
 xclip
 wmctrl
 vim
+cifs-utils
+python3
+python3-setuptools
+python3-crypto
+python2

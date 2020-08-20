@@ -1,11 +1,30 @@
 #!/bin/bash
-JRM_DIR=$(dirname $(readlink -f $0))
-echo "initializing script..."
+
+JRM_INIT=$1
+
+if [[ ! $JRM_INIT == "init" ]]; then
+    echo -n "
+    +---------------------------------------+
+    | to run the bootstrapper, please       |
+    | re-run this with the 'init' argument! |
+    | e.g. \"./bootstrap init\"             |
+    +---------------------------------------+
+    "
+    exit
+    else 
 sleep 1
-echo "script started from $JRM_DIR"
+fi 
+
+# fancy method to store the absolute path of this script. will come in handy throughout the bootstrap
+JRM_DIR=$(dirname $(readlink -f $0))
+
+# we begin...
+echo "initializing... script started from $JRM_DIR"
 sleep 1
 echo "checking for dependencies..."
 sleep 2
+# real skeezy way to make sure this script is in proper directory
+# will still break if, for some reason, env/lib_list.txt is missing!
 if [[ ! -f $JRM_DIR/env/pkg_list.txt ]]; then 
 		echo "script cannot find ./env/pkg_list.txt! exiting..." 
 		echo "make sure ./init is run from the base of the git repository."
@@ -13,15 +32,34 @@ if [[ ! -f $JRM_DIR/env/pkg_list.txt ]]; then
 else 
 		echo "found /env folder with package list! let's continue..."
 fi 
+sleep 1
 
-echo "By default, the script will create a directory at $HOME/gits."
-echo "Enter an alternative git directory, or simply press [Enter] to continue using default..."
-read JRM_GIT_DIR
-if [[ -z $JRM_GIT_DIR ]]; then
-JRM_GIT_DIR=$HOME/gits
+# git dir - allow user to set custom download path for any downloaded repos
+echo -n "+--------------------------------------+
+| configure your homedir git directory |
++--------------------------------------+
+"
+sleep 2
+echo "By default, the script will create a directory in $HOME called 'gits'."
+echo "During this bootstrap, some repositories will be downloaded to this directory before installation, e.g. node version manager, ls++, etc"
+sleep 2
+echo "You can enter a different directory name below, or press [Enter] to use defaults." 
+echo "WARNING: You cannot change the root path - it will always be created in your home directory!" 
+echo "[Enter] or custom dir name:"
+read JRM_GIT_VAR
+
+# Check if user set custom dir - if not use default
+if [[ -z $JRM_GIT_VAR ]]; then
+    JRM_GIT_DIR=$HOME/gits
+else 
+	JRM_GIT_DIR=$HOME/$JRM_GIT_VAR
 fi 
-# exp_user=$1
-# exp_pass=$2
+# One last heads-up before we begin 
+echo "Git directory set to $JRM_GIT_DIR. Any git repositories which may be downloaded over the course of this bootstrap will be saved to this directory."
+sleep 1
+# collect the rest of the information needed later
+
+# check for cpu arch - cargo-bay will support x86_64 and aarch64, and some armv7l though not as completely
 JRM_ARCH=$(uname -m)
 
 echo -n "
@@ -56,17 +94,19 @@ echo " ███ █ █ ███   █ █ █ ███  ██ ███ █
 echo " █         █                            "
 echo " █       ███   update & install         "
 echo "--------------------------------------- "
-sleep 3
-sudo apt update && sudo apt upgrade -y
+sleep 2
+echo "Running apt update & upgrade before beginning..."
 sleep 1
-echo "installing Zshell, git, and important development packages"
-sudo apt install -y zsh expect git curl wget vim dialog dpkg pkg-config build-essential neofetch htop nmon nmap pinentry-tty htop devscripts 
+sudo apt update && sudo apt upgrade -y
+sleep 3
+echo "installing Zshell, git, vim, and basic CLI file handling tools (pkg-config, dialog, etc)"
+sudo apt install -y zsh expect git curl wget vim dialog dpkg pkg-config htop pinentry-tty  
 sleep 1
 echo "installing important libraries..."
-sudo xargs -a lib_list.txt apt install -y
+sudo xargs -a env/lib_list.txt apt install -y
 sleep 1 
 echo "installing useful packages..."
-sudo xargs -a pkg_list.txt apt install -y
+sudo xargs -a env/pkg_list.txt apt install -y
 sleep 1
 echo " "
 echo "packages installed!"

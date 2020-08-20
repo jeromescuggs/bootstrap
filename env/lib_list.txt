@@ -1,3 +1,4 @@
+ncurses-term
 libclang-dev
 zlib1g-dev
 libssl-dev
