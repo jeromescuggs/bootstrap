@@ -3,86 +3,47 @@ rootin tootin strap-ass bootin
 
 ![](https://raw.githubusercontent.com/jeromescuggs/monoeye/master/jrmvim.png)
 
-## overview
+# overview - WORK IN PROGRESS!
 
 quickly deploy some of the more common packages, tools and libraries to spend less time with setup. 
 
-- installs basics: `zsh expect git curl wget vim dialog dpkg pkg-config build-essential neofetch htop nmon nmap pinentry-tty htop`
+- installs basics: `zsh git curl wget dialog dpkg pkg-config`
 - current list for [pkg_list.txt]
 - current list for [lib_list.txt]
-- install interactive [node manager]
-- install [Go]
-- install rust via [rustup]
-- install ruby via [rbenv]
+- ~~install interactive [node manager]~~
+- ~~install [Go]~~
+- ~~install rust via [rustup]~~
+- ~~install ruby via [rbenv]~~
+
+## features
+
+**Friendly setup script**: I've put alot of effort into making sure very little goes on during the setup, which the user will not be aware of. Ideally the pacing of the setup script will allow for some 'oh shit!' moments - meaning, if you ever need to kill the script, it will be fairly easy to kill it where you want to, without too much irreversible change being done. 
+
+**Easy package customization**: A large goal for this bootstrapper is to be able to quickly get your preferred environment going. Inevitably you will want to tweak the packages which the bootstrapper installs - or perhaps even keep a few swappable packagelists depending on use. 
+
+To make this easy, when the bootstrapper is run, it will look in `./env` for two files: `pkg_list.txt` and `lib_list.txt`. Each file is simply a list of packages, one per line, which you would like the bootstrapper to `sudo apt install`. 
+
+**Simple setup for common/popular tools**: When finished, the bootstrapper will be able to install version managers for npm, rust, and ruby. Python might join them as well. The bootstrapper will install Golang, but I am not too familiar with Go version management currently.
+
+**Custom dotfiles**: If you use Zsh, I will include some relevant files which you might find useful. In particular, I will be including a highly modular `.zshrc` file which contains a large series of conditional checks, to ensure your shell will properly handle any programs you do, or do not, have installed. Adding and removing common binaries will not require editing your rc file - for example, if you install Keychain, simply re-starting your shell will auto-magically switch from the Zsh `ssh-agent` plugin, to instead work with Keychain.
+
+**Vim with crutches**: Also included will be a script which will set Vim up to the configuration I prefer as my default, built around [vim-plug]. 
+
+If you use SpaceVim, but would like to begin diving into the world of Vim configuration, I think you'll really like the setup. It keeps some of the styling cues from SpaceVim, such as the airline statusbar and NERDTree. 
+
+However, it is all very neatly organized into one directory: `$HOME/.vim`, avoiding the labyrinth of symlinks and bloat that SpaceVim leaves you with. 
+
+On top of that, the setup script can be run with the argument `nvim`, which will auto-magically create a new `init.vim` which simply points any NeoVim installation at `$HOME/.vim/vimrc` - which means you only need edit your `vimrc` to see changes also reflect in NeoVim!
 
 [pkg_list.txt]: https://github.com/jeromescuggs/bootstrap/blob/master/env/pkg_list.txt
 [lib_list.txt]: https://github.com/jeromescuggs/bootstrap/blob/master/env/lib_list.txt
-[node manager]: https://github.com/tj/n
+[node manager]: https://github.com/tj/n/
 [Go]: https://golang.org/dl/
 [rustup]: https://rustup.rs
 [rbenv]: https://github.com/rbenv/rbenv
 
 
-### requirements
 
-- debian buster, should be fine with ubuntu 18.04-20.04 but don't quote me on that 
-- everything except for the Golang installation is designed to seamlessly work across cpu architectures - for now Golang supports **x86_64** and **aarch64** cpu's. Not sure what you're running? Run `uname -m` to find out. Arm 6/7 might be in the future, and depending on testing I might need to add some other arch alts e.g. **armv8/arm64**
-
-## setup 
-
-clone this repo: `git clone https://github.com/jeromescuggs/bootstrap`
-
-main environment setup:
-
-``` bash
-cd bootstrap/env
-./init  
-```
-
-setup vimconfig:
-``` bash
-cd bootstrap
-./vim-setup.sh
-```
-
-link neovim config to `vimrc`:
-``` bash
-cd bootstrap 
-./vim-setup.sh nvim 
-```
-
-if there is already a `init.vim` neovim config in `$HOME/.config/nvim`, the script will create a backup and store it in this directory before creating the new one.
-
-### updated 2020-08-02
-
-when the `init` script is executed, it will first run an update of local packages with the APT package manager. after that it will quickly install some basic packages needed not only by this script, but most likely anything you will be doing later: `zsh`,`git`,`curl`,`vim`,`pkg-config`,`build-essential`,`devscripts` and a few others. 
-
-after this, it will divide the remaining installs between needed libraries and packages. however, when doing so, it will look at `lib_list.txt` and `pkg_list.txt` and install the dependencies in these files - so you can easily add or remove as needed.
-
-once done, the script will proceed to then setup popular development environment managers for Go and NPM. Rust and Ruby will be coming soon. 
-
-you might want to check out the `.zshrc` file located in `bootstrap/env` for an idea as to how you might integrate a lot of these programs with your shell. as you can see by looking at it, a lot of it is very flexible - if you have a certain program, the rc file will add the relevant source files and `PATH`s, but you won't get a flood of errors if they're not found. it's an older rc file however and i will be replacing it with a far more current version asap.
-
-### vim setup
-
-i am pretty satisfied with my vim setup, as it is both very pretty yet very lightweight. coming from SpaceVim, learning to take a vanilla vim install and make it fancy without including the stuff i don't use from SpaceVim was pretty difficult, because of the highly specialized way it sets everything up - it wound up setting me *back* as far as learning the ins and outs of configuring vim. 
-
-the core magic is built on the same tool SpaceVim uses: [vim-plug]. after cloning this git repository, navigate to it and run `vim-setup.sh` which will create a folder in your $HOME dir `.vim` and then copy the `vimrc` from this repo into it. at the same time, the script will also grab the vim-plug submodule from its home repository into this folder, before then copying the plugin to its proper subfolder in your home `.vim` directory. 
-
-with both vim-plug and a customized vimrc file installed, you can complete setup by running vim. you will probably see an error or two which is normal (your vimrc is looking for the scripts you're about to tell vim to download). after vim loads, run `:PlugInstall` and you will see the plugin manager open and begin automatically grabbing a variety of plugins I consider useful.
-
-if you plan on running NeoVim, you can run the script again with `nvim` as an argument e.g. `./vim-setup.sh nvim`. this will either create or replace `init.vim` in `~/.config/nvim` and contain 3 lines which will point NeoVim at your Vim config folder to use as its source. This way you can edit a single `vimrc` file, and the changes will reflect in both Vim and NeoVim. 
-
-You might have some settings that work with NeoVim, but not Vim. I've included a section for this which will only execute settings if it detects it is being sourced in NeoVim:
-
-```
-if has('nvim')
-" !-------------------------------!
-" any commands that will only work
-" with neovim can be placed here
-" !-------------------------------!endif
-endif
-```
 
 [git-r-done]: https://github.com/jeromescuggs/git-r-done
 [vim-plug]: https://github.com/junegunn/vim-plug
