@@ -5,9 +5,9 @@ JRM_INIT=$1
 if [[ ! $JRM_INIT == "init" ]]; then
     echo -n "
     +---------------------------------------+
-    | to run the foostrapper, please       |
+    | to run the foostrapper, please        |
     | re-run this with the 'init' argument! |
-    | e.g. \"./bootstrap init\"             |
+    | e.g. \"./foo init\"                     |
     +---------------------------------------+
     "
     exit
@@ -103,6 +103,10 @@ echo "JRM_INIT: $JRM_INIT"
 echo "JRM_DIR: $JRM_DIR"
 echo "JRM_GIT_VAR: $JRM_GIT_VAR"
 echo "JRM_GIT_DIR: $JRM_GIT_DIR"
+echo "JRM_ARCH: $JRM_ARCH"
+echo "notes:"
+echo "-----------------------"
+echo "- if default git directory is chosen, JRM_GIT_VAR will be blank."
 # echo ""
 # echo ""
 
