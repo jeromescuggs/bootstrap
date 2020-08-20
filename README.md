@@ -15,6 +15,12 @@ quickly deploy some of the more common packages, tools and libraries to spend le
 - ~~install rust via [rustup]~~
 - ~~install ruby via [rbenv]~~
 
+## files
+
+- **README.md** no idea what this file is. truly a mystery 
+- **init** this is the main script, will likely be renamed later. As a safety measure it requires an argument to actually begin setup: `./init init`. Running `./init` without any argument will simply direct you on how to begin setup. 
+- **foo** this is a dummy script which mimics the beginning part of the `init` bootstrapper, so I can test the script without actually running any installs etc. Before exiting it will list any variables set by the script, which might come in handy if you're troubleshooting.
+
 ## features
 
 **Friendly setup script**: I've put alot of effort into making sure very little goes on during the setup, which the user will not be aware of. Ideally the pacing of the setup script will allow for some 'oh shit!' moments - meaning, if you ever need to kill the script, it will be fairly easy to kill it where you want to, without too much irreversible change being done. 
