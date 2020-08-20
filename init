@@ -1,13 +1,28 @@
 #!/bin/bash
 JRM_DIR=$(dirname $(readlink -f $0))
+echo "initializing script..."
+sleep 1
+echo "script started from $JRM_DIR"
+sleep 1
+echo "checking for dependencies..."
+sleep 2
+if [[ ! -f $JRM_DIR/env/pkg_list.txt ]]; then 
+		echo "script cannot find ./env/pkg_list.txt! exiting..." 
+		echo "make sure ./init is run from the base of the git repository."
+		exit
+else 
+		echo "found /env folder with package list! let's continue..."
+fi 
+
+echo "By default, the script will create a directory at $HOME/gits."
+echo "Enter an alternative git directory, or simply press [Enter] to continue using default..."
+read JRM_GIT_DIR
+if [[ -z $JRM_GIT_DIR ]]; then
 JRM_GIT_DIR=$HOME/gits
+fi 
 # exp_user=$1
 # exp_pass=$2
 JRM_ARCH=$(uname -m)
-# if [[ -z $1 ]]; then 
-# 	echo "USAGE: init [username] [password]"
-# 	echo "yup"
-# fi 
 
 echo -n "
 
