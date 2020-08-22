@@ -107,6 +107,9 @@ echo "JRM_ARCH: $JRM_ARCH"
 echo "notes:"
 echo "-----------------------"
 echo "- if default git directory is chosen, JRM_GIT_VAR will be blank."
+echo ""
+sleep 2
+cat $JRM_DIR/jrm
 # echo ""
 # echo ""
 
