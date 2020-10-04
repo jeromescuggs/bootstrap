@@ -1,7 +1,8 @@
-" # Basic Settings
+"# Basic Settings
 set nocompatible				" vim-specific settings, non-vi-compatible
 set backspace=indent,eol,start 	" Allow backspace in insert mode
-set number						" Line numbers
+set number                      " Line numbers
+set ai
 set hidden						" Allow hidden buffers
 filetype plugin indent on		" Enable file type detection and do language-dependent indenting.
 set history=100					" Default = 8
@@ -14,55 +15,95 @@ set textwidth=0					" prevent Vim from automatically inserting line breaks
 set wrapmargin=0
 set formatoptions-=t			" Don't change wrapping on existing lines
 set formatoptions+=l
+set nofoldenable
+
+" no indent on paste
+set pastetoggle=<F2>
+nnoremap <F2> :set invpaste paste?<CR>
+" set pastetoggle=<F2> 
+set mouse=a             " allow using mouse
+" set laststatus=2        "Make airline status bar appear all the time
+" set cmdheight=1
+
 
 call plug#begin('~/.vim/plugged')
 
+" [ jerome vim ]
 Plug 'jeromescuggs/hybrid-operator'
 Plug 'jeromescuggs/vim-deus'
-Plug 'chriskempson/base16-vim'
+
+" [ colorize hex codes ]
 Plug 'lilydjwg/colorizer'
 
+" [ highlighting and vim config for markdown ]
+Plug 'davidbeckingsale/writegood.vim'
+Plug 'plasticboy/vim-markdown'
 " Plug 'tpope/vim-markdown'
 " Plug 'gabrielelana/vim-markdown'
-Plug 'vim-scripts/txt.vim'
-" Plug 'vim-pandoc/vim-pandoc-syntax'
 
+" [ plugins for vim-as-text-editor ]
+Plug 'vim-scripts/txt.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-abolish' " Fancy abbreviation replacements
 Plug 'junegunn/limelight.vim' " Highlights only active paragraph
 Plug 'junegunn/goyo.vim' " Full screen writing mode
 Plug 'reedes/vim-lexical' " Better spellcheck mappings
+Plug 'vim-pandoc/vim-pandoc-syntax' 
 Plug 'reedes/vim-litecorrect' " Better autocorrections
-
-
-Plug 'scrooloose/nerdtree'
-Plug 'ryanoasis/vim-devicons'
-
-Plug 'justinmk/vim-syntax-extra'
-
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-notes'
-
-Plug 'kristijanhusak/vim-carbon-now-sh'
-
 Plug 'reedes/vim-wordy'
 Plug 'reedes/vim-pencil'
 
+" [ language support ]
+" Plug 'preservim/tagbar'
+" Plug 'rust-lang/rust.vim'
+
+" [ fancy filetree browser ]
+Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+
+" [ misc goodies ]
+"Plug 'justinmk/vim-syntax-extra'
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-notes'
+Plug 'kristijanhusak/vim-carbon-now-sh'
+
+" [ misc style goodies ]
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-Plug 'ayu-theme/ayu-vim'
-Plug 'ayu-theme/ayu-vim-airline'
-
 Plug 'bling/vim-bufferline'
 Plug 'vim-syntastic/syntastic'
-Plug 'edkolev/tmuxline.vim'
+"Plug 'edkolev/tmuxline.vim'
 Plug 'fadein/vim-FIGlet'
+
+" [ themes ]
+Plug 'ayu-theme/ayu-vim'
+Plug 'ayu-theme/ayu-vim-airline'
+Plug 'jacoborus/tender.vim'
+Plug 'keith/parsec.vim'
+" Plug 'nightsense/carbonized'
+Plug 'tlhr/anderson.vim'
+Plug 'sainnhe/edge'
+" Plug 'chase/focuspoint-vim'
+Plug 'SolomonSklash/vim-snazzy'
+Plug 'srcery-colors/srcery-vim'
+
+" pizzazz
+Plug 'mhinz/vim-startify'
+Plug 'severin-lemaignan/vim-minimap'
+" Plug 'wfxr/minimap.vim'
 call plug#end()
-:autocmd!
+
+" [ Minimap ]
+" autocmd VimEnter * :Minimap
+let g:minimap_highlight='Title'
+" let g:minimap_auto_start = 1
+
+" [ enable spell/grammar checking when writing markdown ]
+" autocmd filetype markdown,md,page WritegoodEnable
 
 
-
-  augroup pencil
+" [ enter writer-centric modes when opening markdown ]
+augroup pencil
    autocmd!
    autocmd filetype markdown,mkd call pencil#init()
        \ | call lexical#init()
@@ -70,16 +111,16 @@ call plug#end()
        \ | setl spell spl=en_us fdl=4 noru nonu nornu
        \ | setl fdo+=search
   augroup END
- " Pencil / Writing Controls {{{
-   let g:pencil#wrapModeDefault = 'soft'
-   let g:pencil#textwidth = 74
+" Pencil / Writing Controls {{{
+   let g:pencil#wrapModeDefault = 'hard'
+   let g:pencil#textwidth = 80
    let g:pencil#joinspaces = 0
    let g:pencil#cursorwrap = 1
    let g:pencil#conceallevel = 3
    let g:pencil#concealcursor = 'c'
    let g:pencil#softDetectSample = 20
    let g:pencil#softDetectThreshold = 130
- " }}}
+"  }}}
 
 " clear autocmds
 " :autocmd!
@@ -92,38 +133,55 @@ if has('nvim')
 " !-------------------------------!
 endif
 
-let ayucolor="mirage"
+" tuning for gVim only
+if has('gui_running')
+     set number " show line numbers
+     set columns=84 lines=48 " GUI window geometry
+     set guifont=Monospace\ 12 " font for GUI window
+     set background=light " light background for GUI
+endif
+
+" theme options
+let ayucolor="mirage" " custom option for ayu theme
+" let g:hybrid_custom_term_colors = 1 " custom option for hybrid_operator
 colo ayu 
+" colo deus 
+" colo tender
+" colo srcery
+" colo hybrid_operator
 set background=dark
 set termguicolors
-
-syntax on
-syntax enable 
 set t_Co=256
+
+" enable highlighting and map commands
+syntax on
+"syntax enable 
+
+" [ Enable NerdTree ]
 map <C-n> :NERDTreeToggle<CR>
 
-function! WinMove(key)
-    let t:curwin = winnr()
-    exec "wincmd ".a:key
-    if (t:curwin == winnr())
-        if (match(a:key,'[jk]'))
-            wincmd v
-        else
-            wincmd s
-        endif
-        exec "wincmd ".a:key
-    endif
-endfunction
+" [ use ctrl+hjkl to move between panes ]
+"function! WinMove(key)
+"    let t:curwin = winnr()
+"    exec "wincmd ".a:key
+"    if (t:curwin == winnr())
+"        if (match(a:key,'[jk]'))
+"            wincmd v
+"        else
+"            wincmd s
+"        endif
+"        exec "wincmd ".a:key
+"    endif
+"endfunction
 
-nnoremap <silent> <C-h> :call WinMove('h')<CR>
-nnoremap <silent> <C-j> :call WinMove('j')<CR>
-nnoremap <silent> <C-k> :call WinMove('k')<CR>
-nnoremap <silent> <C-l> :call WinMove('l')<CR>
+"nnoremap <silent> <C-h> :call WinMove('h')<CR>
+"nnoremap <silent> <C-j> :call WinMove('j')<CR>
+"nnoremap <silent> <C-k> :call WinMove('k')<CR>
+"nnoremap <silent> <C-l> :call WinMove('l')<CR>
 
-set mouse=a             " allow using mouse
-set laststatus=2		" Make airline status bar appear all the time
-set noshowmode          " hides the duplicate --INSERT-- under airline
-
-au BufEnter,BufRead,BufNewFile *.md,*.archive,*.page :setlocal filetype=markdown
+" filetype associations
+au BufEnter,BufRead,BufNewFile *.page,*.md,*.archive setlocal filetype=markdown
 " au BufEnter,BufRead,BufNewFile *.page :setlocal filetype=md
-:autocmd VimEnter * :AirlineRefresh
+autocmd VimEnter * :AirlineRefresh
+
+
